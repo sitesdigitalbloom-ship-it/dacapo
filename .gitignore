@@ -1,0 +1,6 @@
+# Artefatos internos da esteira — não fazem parte do site publicado.
+# O repositório é público e é a fonte do deploy, então só sobe o que o
+# visitante precisa receber.
+revisao/
+brief.md
+relatorio-de-revisao.md

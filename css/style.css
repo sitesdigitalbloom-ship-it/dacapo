@@ -1,0 +1,1689 @@
+/* ==========================================================================
+   Da Capo Musical — escola de música em Viamão, RS
+   Persona visual: C — Estruturado de Alto Contraste
+   Direção: "estúdio". Base navy alternando com claro, ouro só em detalhe
+   (filete, numeral, botão, hover), composições em camada e mockups reais:
+   uma aula de verdade na 03 e o cartaz do festival emoldurado na 05.
+   ========================================================================== */
+
+:root {
+  /* base escura, dominante */
+  --noite:      #14243A;   /* fundo escuro principal */
+  --noite-2:    #1B2F4C;   /* superfície elevada no escuro, navy da marca */
+  --noite-3:    #24395A;   /* cartão sobre o escuro */
+  --noite-topo: #0F1C2E;   /* cabeçalho e rodapé */
+
+  /* base clara */
+  --claro:      #F4F2ED;   /* fundo claro das seções de leitura */
+  --claro-2:    #EAE7DF;   /* superfície de destaque no claro */
+  --branco:     #FFFFFF;
+
+  /* ouro: SÓ detalhe. Filete, numeral, botão, hover, foco. Nunca fundo grande. */
+  --ouro:       #D9A441;
+  --ouro-claro: #E8C275;
+  --ouro-texto: #8A5F17;   /* ouro legível em texto pequeno sobre o claro */
+
+  --texto:      #14243A;   /* texto sobre o claro */
+  --texto-2:    #55637A;
+  --texto-c:    #E8E6E1;   /* texto sobre o escuro */
+  --texto-c2:   #A6B1C1;
+
+  --linha:       rgba(20, 36, 58, .13);
+  --linha-forte: rgba(20, 36, 58, .24);
+  --linha-c:     rgba(232, 230, 225, .14);
+  --linha-c2:    rgba(232, 230, 225, .26);
+  --ouro-filete: rgba(217, 164, 65, .5);
+
+  /* tipografia */
+  --display: 'Montserrat', system-ui, sans-serif;
+  --sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --script:  'Dancing Script', cursive;
+
+  /* forma: canto discreto, nunca pílula */
+  --raio:   6px;
+  --raio-g: 10px;
+  --sombra:   0 18px 40px -24px rgba(15, 28, 46, .5);
+  --sombra-g: 0 34px 70px -30px rgba(15, 28, 46, .6);
+
+  /* ritmo */
+  --envolucro: 1200px;
+  --gutter: clamp(1.2rem, 4vw, 3rem);
+  --secao-y: clamp(3.6rem, 6.5vw, 6rem);
+}
+
+/* ---------- reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;   /* clip não cria área rolável; sem isso o print ganha faixa vazia à direita */
+  background: var(--noite);
+}
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 1.0125rem;
+  line-height: 1.75;
+  color: var(--texto-2);
+  background: var(--noite);
+  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button { font: inherit; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+figure { margin: 0; }
+p { margin: 0 0 1.05rem; }
+p:last-child { margin-bottom: 0; }
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -.028em;
+  color: var(--texto);
+  margin: 0 0 1rem;
+}
+
+.svg-oculto { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.pular-para-conteudo {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 2000;
+  background: var(--ouro);
+  color: var(--noite);
+  padding: .8rem 1.3rem;
+  font-family: var(--display);
+  font-weight: 700;
+  text-decoration: none;
+}
+.pular-para-conteudo:focus { left: 0; }
+
+:focus-visible { outline: 2px solid var(--ouro); outline-offset: 3px; }
+
+/* ---------- layout base ---------- */
+.envolucro {
+  width: 100%;
+  max-width: var(--envolucro);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.envolucro--estreito { max-width: 900px; }
+
+.secao { position: relative; padding-block: var(--secao-y); overflow: hidden; }
+.secao--claro { background: var(--claro); }
+.secao--noite { background: var(--noite); color: var(--texto-c2); }
+.secao--noite h2, .secao--noite h3 { color: var(--texto-c); }
+.secao--noite .intro { color: var(--texto-c2); }
+.secao > .envolucro { position: relative; z-index: 1; }
+
+/* malha fina, a assinatura de fundo da persona C */
+.secao__malha, .hero__malha {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--linha-c) 1px, transparent 1px),
+    linear-gradient(90deg, var(--linha-c) 1px, transparent 1px);
+  background-size: 78px 78px;
+  opacity: .5;
+  mask-image: radial-gradient(120% 100% at 70% 0%, #000 10%, transparent 72%);
+  -webkit-mask-image: radial-gradient(120% 100% at 70% 0%, #000 10%, transparent 72%);
+}
+
+/* ==========================================================================
+   Rótulo de seção: numeral em ouro + filete + nome. Sem pílula.
+   ========================================================================== */
+.rotulo {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin: 0 0 1.1rem;
+  font-family: var(--display);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+.rotulo--claro { color: var(--texto-c2); }
+.rotulo__num {
+  position: relative;
+  padding-right: .85rem;
+  font-weight: 700;
+  color: var(--ouro-texto);
+  letter-spacing: .1em;
+}
+.rotulo--claro .rotulo__num { color: var(--ouro); }
+.rotulo__num::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 50%;
+  width: 1px; height: 12px;
+  margin-top: -6px;
+  background: var(--linha-forte);
+}
+.rotulo--claro .rotulo__num::after { background: var(--linha-c2); }
+
+/* ==========================================================================
+   Tipografia de conteúdo
+   ========================================================================== */
+.titulo {
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  max-width: 24ch;
+  text-wrap: balance;
+}
+.intro { max-width: 62ch; font-size: 1.03rem; color: var(--texto-2); }
+.cabecalho-secao { margin-bottom: clamp(2.2rem, 4vw, 3.2rem); }
+
+.destaque {
+  position: relative;
+  margin: 1.4rem 0 1.5rem;
+  padding-left: 1.4rem;
+  font-family: var(--display);
+  font-size: clamp(1.08rem, 1.9vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--texto);
+  border-left: 2px solid var(--ouro);
+}
+
+/* ==========================================================================
+   Equalizador — pequeno, só como sinal de "áudio" no rótulo
+   ========================================================================== */
+.equalizador { display: inline-flex; align-items: flex-end; gap: 2px; height: 11px; }
+.equalizador i {
+  display: block;
+  width: 2px;
+  height: 100%;
+  background: var(--ouro);
+  transform-origin: bottom;
+  animation: eq 1.05s ease-in-out infinite alternate;
+}
+.equalizador i:nth-child(1) { animation-delay: 0s;   transform: scaleY(.35); }
+.equalizador i:nth-child(2) { animation-delay: .16s; transform: scaleY(.8); }
+.equalizador i:nth-child(3) { animation-delay: .32s; transform: scaleY(.5); }
+.equalizador i:nth-child(4) { animation-delay: .1s;  transform: scaleY(.95); }
+@keyframes eq { from { transform: scaleY(.28); } to { transform: scaleY(1); } }
+
+/* ==========================================================================
+   Teclado de piano — um único filete estrutural, antes do rodapé
+   ========================================================================== */
+.teclado { line-height: 0; background: var(--claro); position: relative; z-index: 2; }
+.teclado svg { display: block; width: 100%; height: 26px; }
+
+/* ==========================================================================
+   Botões
+   ========================================================================== */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  min-height: 50px;
+  padding: .85rem 1.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--raio);
+  font-family: var(--display);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+.botao--grande { min-height: 56px; padding: 1rem 1.9rem; font-size: .8rem; }
+.botao--bloco  { width: 100%; }
+
+.botao--ouro { background: var(--ouro); color: var(--noite); border-color: var(--ouro); }
+.botao--ouro:hover { background: var(--ouro-claro); border-color: var(--ouro-claro); transform: translateY(-2px); box-shadow: 0 12px 26px -14px rgba(217,164,65,.85); }
+
+.botao--fantasma { background: transparent; color: var(--texto-c); border-color: var(--linha-c2); }
+.botao--fantasma:hover { border-color: var(--texto-c); background: rgba(232,230,225,.06); transform: translateY(-2px); }
+
+.botao--contorno { background: transparent; color: var(--texto); border-color: var(--linha-forte); }
+.botao--contorno:hover { border-color: var(--texto); background: rgba(20,36,58,.05); }
+
+/* ==========================================================================
+   Cabeçalho — sempre escuro, o site abre em navy
+   ========================================================================== */
+.cabecalho {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(15, 28, 46, .82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: background-color .3s ease, border-color .3s ease;
+}
+.cabecalho.rolado { background: rgba(15, 28, 46, .96); border-bottom-color: var(--linha-c); }
+.cabecalho__interno {
+  width: 100%;
+  max-width: var(--envolucro);
+  margin-inline: auto;
+  padding: 1rem var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  transition: padding .3s ease;
+}
+.cabecalho.rolado .cabecalho__interno { padding-block: .7rem; }
+.cabecalho__logo { display: flex; align-items: center; min-height: 44px; flex: 0 0 auto; }
+.cabecalho__logo img { height: 42px; width: auto; transition: height .3s ease; }
+.cabecalho.rolado .cabecalho__logo img { height: 36px; }
+
+.cabecalho__nav { margin-left: auto; }
+.cabecalho__nav ul { display: flex; gap: clamp(1rem, 2vw, 1.8rem); }
+.cabecalho__nav a {
+  position: relative;
+  display: block;
+  padding-block: .4rem;
+  font-family: var(--display);
+  font-size: .76rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--texto-c2);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .22s ease;
+}
+.cabecalho__nav a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0; height: 1px;
+  background: var(--ouro);
+  transition: width .26s ease;
+}
+.cabecalho__nav a:hover { color: var(--texto-c); }
+.cabecalho__nav a:hover::after, .cabecalho__nav a.ativo::after { width: 100%; }
+.cabecalho__nav a.ativo { color: var(--ouro); }
+
+.cabecalho__cta { flex: 0 0 auto; min-height: 42px; padding: .6rem 1.2rem; }
+
+/* hambúrguer em marfim sobre o cabeçalho navy: contraste 11,7:1 */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px; min-height: 44px;
+  background: none;
+  border: none;
+  color: var(--texto-c);
+  cursor: pointer;
+  line-height: 0;
+  padding: 0;
+}
+.nav-toggle svg { width: 26px; height: 26px; }
+
+/* ---------- drawer mobile (visual FORA de media query) ---------- */
+.mobile-menu {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  z-index: 1200;
+  width: min(88vw, 360px);
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem 1.6rem 1.8rem;
+  background: var(--noite-topo);       /* SÓLIDO, nunca transparente */
+  border-left: 1px solid var(--ouro-filete);
+  box-shadow: -22px 0 56px -22px rgba(0, 0, 0, .7);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform .36s cubic-bezier(.4,0,.2,1), visibility .36s;
+  overscroll-behavior: contain;
+  overflow-y: auto;
+}
+.mobile-menu.aberto { transform: none; visibility: visible; }
+.mobile-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: .5rem;
+  border-bottom: 1px solid var(--linha-c);
+}
+.mobile-menu__logo { height: 36px; width: auto; }
+.mobile-close {
+  display: flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px;
+  margin-right: -.6rem;
+  background: none; border: none; padding: 0;
+  color: var(--texto-c); cursor: pointer; line-height: 0;
+}
+.mobile-close svg { width: 25px; height: 25px; }
+.mobile-menu__links { display: flex; flex-direction: column; }
+.mobile-menu__links li { border-bottom: 1px solid var(--linha-c); }
+.mobile-menu__links a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 54px;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--texto-c);
+  text-decoration: none;
+  transition: color .22s ease;
+}
+.mobile-menu__links a span {
+  min-width: 2.4ch;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--ouro);
+}
+.mobile-menu__links a:hover { color: var(--ouro); }
+.mobile-menu__cta { margin-top: auto; width: 100%; }
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(6, 12, 22, .62);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s;
+}
+.menu-backdrop.aberto { opacity: 1; visibility: visible; }
+
+/* ==========================================================================
+   Abertura — navy, composição em camadas à direita
+   ========================================================================== */
+.hero {
+  position: relative;
+  background: var(--noite);
+  padding-top: clamp(7rem, 12vw, 9.5rem);
+  padding-bottom: clamp(3.5rem, 6vw, 5.5rem);
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ouro-filete) 30%, var(--ouro-filete) 70%, transparent);
+}
+.hero__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
+  gap: clamp(2.4rem, 5vw, 4.5rem);
+  align-items: center;
+}
+.hero__titulo {
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.032em;
+  color: var(--texto-c);
+  max-width: 16ch;
+  margin-bottom: 1.3rem;
+  text-wrap: balance;
+}
+.hero__sub {
+  max-width: 50ch;
+  font-size: clamp(1rem, 1.35vw, 1.08rem);
+  color: var(--texto-c2);
+  margin-bottom: 2.2rem;
+}
+.hero__acoes { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 2.4rem; }
+
+.numeros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 0;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--linha-c);
+}
+.numeros li {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  padding-right: clamp(1.2rem, 3vw, 2.4rem);
+  margin-right: clamp(1.2rem, 3vw, 2.4rem);
+  border-right: 1px solid var(--linha-c);
+}
+.numeros li:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.numeros strong {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--ouro);
+}
+.numeros span { font-size: .82rem; color: var(--texto-c2); }
+
+
+/* ==========================================================================
+   Quadros de foto
+   ========================================================================== */
+.quadro { position: relative; overflow: hidden; border-radius: var(--raio-g); box-shadow: var(--sombra); }
+.quadro img { width: 100%; height: 100%; object-fit: cover; transition: transform .55s cubic-bezier(.22,.61,.36,1); }
+.quadro:hover img { transform: scale(1.03); }
+.quadro--alto { aspect-ratio: 4 / 5; }
+
+.secao__grade {
+  display: grid;
+  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  gap: clamp(2.2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+.secao__midia { position: relative; padding-bottom: 3.6rem; padding-right: 2rem; }
+.quadro--sobreposto {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 52%;
+  aspect-ratio: 1;
+  border: 6px solid var(--claro);
+  box-shadow: var(--sombra-g);
+}
+.secao__texto > p { max-width: 60ch; }
+
+.marcas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin-top: 1.9rem;
+  border-top: 1px solid var(--linha);
+}
+.marcas li {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding-block: .8rem;
+  border-bottom: 1px solid var(--linha);
+  font-family: var(--display);
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+.marcas li::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 6px; height: 6px;
+  background: var(--ouro);
+}
+
+/* ==========================================================================
+   Cursos — grade rígida sobre o escuro, filete de ouro no hover
+   ========================================================================== */
+.cursos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--linha-c);
+  border: 1px solid var(--linha-c);
+}
+.curso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .8rem;
+  padding: 1.7rem .7rem 1.4rem;
+  background: var(--noite);
+  transition: background-color .26s ease, box-shadow .26s ease;
+}
+.curso img { width: 40px; height: 40px; opacity: .82; transition: opacity .26s ease, transform .3s ease; }
+.curso span {
+  font-family: var(--display);
+  font-size: .84rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--texto-c);
+}
+.curso:hover { background: var(--noite-2); box-shadow: inset 0 -2px 0 var(--ouro); }
+.curso:hover img { opacity: 1; transform: translateY(-2px); }
+
+/* ==========================================================================
+   Como funciona — passos + foto da aula
+   ========================================================================== */
+.andamento {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: clamp(2.4rem, 5vw, 4.5rem);
+  align-items: center;
+}
+.passos { display: flex; flex-direction: column; }
+.passo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.2rem;
+  padding-block: 1.4rem;
+  border-top: 1px solid var(--linha);
+}
+.passo:last-child { border-bottom: 1px solid var(--linha); }
+.passo__num {
+  font-family: var(--display);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--ouro-texto);
+  padding-top: .28rem;
+}
+.passo h3 { font-size: 1.06rem; margin-bottom: .35rem; }
+.passo p { margin: 0; font-size: .93rem; }
+
+/* ==========================================================================
+   Faixa de conversão
+   ========================================================================== */
+.faixa {
+  position: relative;
+  background: var(--noite-topo);
+  padding-block: clamp(2.6rem, 4.5vw, 3.8rem);
+  border-block: 1px solid var(--linha-c);
+}
+.faixa__interno {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.8rem, 4vw, 3.5rem);
+  flex-wrap: wrap;
+}
+.faixa__titulo {
+  font-size: clamp(1.5rem, 2.9vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.18;
+  color: var(--texto-c);
+  max-width: 26ch;
+  margin: 0;
+  text-wrap: balance;
+}
+.faixa .botao { flex: 0 0 auto; }
+
+/* ==========================================================================
+   Razões
+   ========================================================================== */
+.razoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.2rem, 2.4vw, 2rem); }
+.razao { padding-top: 1.5rem; border-top: 2px solid var(--linha-forte); transition: border-color .26s ease; }
+.razao:hover { border-top-color: var(--ouro); }
+.razao__num {
+  display: block;
+  margin-bottom: .9rem;
+  font-family: var(--display);
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: var(--ouro-texto);
+}
+.razao h3 { font-size: 1.16rem; margin-bottom: .7rem; max-width: 20ch; }
+.razao p { margin: 0; font-size: .95rem; }
+
+/* ==========================================================================
+   No palco — cartaz emoldurado + galeria
+   ========================================================================== */
+.palco {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: clamp(1.6rem, 3.5vw, 2.8rem);
+  align-items: start;
+}
+/* mockup: o cartaz como um quadro na parede */
+.cartaz { position: relative; }
+.cartaz__moldura {
+  position: relative;
+  padding: 14px;
+  background: linear-gradient(150deg, #2E4058, #16263C);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px var(--ouro-filete),
+    var(--sombra-g);
+}
+.cartaz__moldura::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,.45);
+  pointer-events: none;
+}
+.cartaz__moldura img { width: 100%; height: auto; display: block; }
+.cartaz__passe {
+  position: absolute;
+  z-index: 2;
+  top: -.7rem; left: 1.4rem;
+  padding: .3rem .7rem;
+  background: var(--ouro);
+  color: var(--noite);
+  font-family: var(--display);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.galeria { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.galeria__item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: var(--raio);
+  background: var(--noite-2);
+}
+.galeria__item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(.92) brightness(.94);
+  transition: transform .55s cubic-bezier(.22,.61,.36,1), filter .4s ease;
+}
+.galeria__item:hover img { transform: scale(1.05); filter: none; }
+
+/* ==========================================================================
+   Parceiros
+   ========================================================================== */
+.parceiros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--linha);
+  border: 1px solid var(--linha);
+}
+.parceiros li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 136px;
+  padding: 1.4rem 1.8rem;
+  background: var(--claro);
+  transition: background-color .26s ease;
+}
+.parceiros li:hover { background: var(--branco); }
+.parceiros img {
+  max-height: 68px;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  opacity: .62;
+  transition: opacity .3s ease;
+}
+.parceiros li:hover img { opacity: 1; }
+
+.parceiros__chamada { margin-top: 1.8rem; font-size: .95rem; color: var(--texto-2); }
+.parceiros__chamada a {
+  color: var(--ouro-texto);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ouro-filete);
+  transition: border-color .22s ease;
+}
+.parceiros__chamada a:hover { border-bottom-color: var(--ouro-texto); }
+
+/* ==========================================================================
+   Depoimentos
+   ========================================================================== */
+.depoimentos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.2rem, 2.4vw, 2rem); }
+.depoimento {
+  display: flex;
+  flex-direction: column;
+  padding: 1.7rem 1.5rem 1.4rem;
+  background: var(--noite-2);
+  border-radius: var(--raio-g);
+  border-left: 2px solid var(--ouro);
+}
+.depoimento blockquote { margin: 0; }
+.depoimento blockquote p { margin: 0; font-size: .97rem; line-height: 1.7; color: var(--texto-c); }
+.depoimento figcaption {
+  margin-top: auto;
+  padding-top: 1.2rem;
+  font-family: var(--display);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ouro);
+}
+
+/* ==========================================================================
+   Dúvidas
+   ========================================================================== */
+.faq { border-top: 1px solid var(--linha); }
+.faq__item { border-bottom: 1px solid var(--linha); }
+.faq__pergunta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  width: 100%;
+  min-height: 62px;
+  padding: 1.1rem 0;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: clamp(.96rem, 1.5vw, 1.04rem);
+  font-weight: 600;
+  color: var(--texto);
+  transition: color .22s ease;
+}
+.faq__pergunta:hover { color: var(--ouro-texto); }
+.faq__item.ativo .faq__pergunta { color: var(--ouro-texto); }
+.faq__pergunta i { position: relative; flex: 0 0 auto; width: 14px; height: 14px; }
+.faq__pergunta i::before, .faq__pergunta i::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 14px; height: 1.5px;
+  margin-top: -.75px;
+  background: currentColor;
+  transition: transform .3s ease, opacity .3s ease;
+}
+.faq__pergunta i::after { transform: rotate(90deg); }
+.faq__item.ativo .faq__pergunta i::after { opacity: 0; }
+.faq__resposta { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s ease; }
+.faq__resposta > p { overflow: hidden; margin: 0; font-size: .96rem; }
+.faq__item.ativo .faq__resposta { grid-template-rows: 1fr; }
+.faq__item.ativo .faq__resposta > p { padding-bottom: 1.3rem; }
+
+/* ==========================================================================
+   Contato
+   ========================================================================== */
+.secao--contato { padding-bottom: clamp(4rem, 7vw, 6.5rem); }
+.contato {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 4.5vw, 3.5rem);
+  align-items: start;
+}
+.formulario {
+  padding: clamp(1.6rem, 3vw, 2.2rem);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+  border-top: 2px solid var(--ouro);
+  border-radius: var(--raio-g);
+  box-shadow: var(--sombra);
+}
+.campo { margin-bottom: 1.15rem; }
+.campo label {
+  display: block;
+  margin-bottom: .42rem;
+  font-family: var(--display);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+.campo input[type="text"],
+.campo input[type="email"],
+.campo input[type="tel"],
+.campo textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: .75rem .9rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--texto);
+  background: var(--claro);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  transition: border-color .22s ease, box-shadow .22s ease, background-color .22s ease;
+}
+.campo textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
+.campo input::placeholder, .campo textarea::placeholder { color: rgba(85, 99, 122, .62); }
+.campo input:focus, .campo textarea:focus {
+  outline: none;
+  background: var(--branco);
+  border-color: var(--ouro);
+  box-shadow: 0 0 0 3px rgba(217,164,65,.2);
+}
+.campo.invalido input, .campo.invalido textarea { border-color: #B3402C; }
+.campo__erro { display: none; margin-top: .38rem; font-size: .8rem; font-weight: 500; color: #B3402C; }
+.campo.invalido .campo__erro { display: block; }
+
+.campo--consentimento {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .1rem .7rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+.campo--consentimento input { width: 18px; height: 18px; margin-top: .3rem; accent-color: var(--ouro-texto); cursor: pointer; }
+.campo--consentimento label {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: .85rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.6;
+  color: var(--texto-2);
+  cursor: pointer;
+}
+.campo--consentimento .campo__erro { grid-column: 2; }
+.campo--consentimento a { color: var(--ouro-texto); font-weight: 600; }
+
+.formulario__aviso { margin: 1rem 0 0; font-size: .79rem; line-height: 1.6; color: var(--texto-2); }
+
+/* canais: mesmo tamanho, mesmo peso, mesmo alinhamento */
+.contatos { display: flex; flex-direction: column; border-top: 1px solid var(--linha); }
+.contatos li { border-bottom: 1px solid var(--linha); }
+.contatos a {
+  display: flex;
+  align-items: flex-start;
+  gap: .95rem;
+  min-height: 56px;
+  padding: 1rem .2rem;
+  color: var(--texto);
+  text-decoration: none;
+  transition: color .22s ease, padding-left .22s ease;
+}
+.contatos a:hover { color: var(--ouro-texto); padding-left: .6rem; }
+.contatos svg { flex: 0 0 auto; margin-top: .3rem; color: var(--ouro-texto); }
+.contatos span { display: flex; flex-direction: column; line-height: 1.5; font-size: .94rem; }
+.contatos strong {
+  font-family: var(--display);
+  font-size: .66rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--texto-2);
+  margin-bottom: .2rem;
+}
+
+/* ==========================================================================
+   Rodapé
+   ========================================================================== */
+.rodape { background: var(--noite-topo); color: var(--texto-c2); }
+.rodape__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.3fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 4vw, 3.4rem);
+  padding-block: clamp(2.6rem, 4.5vw, 3.6rem);
+}
+.rodape__marca { height: 50px; width: auto; margin-bottom: 1.1rem; }
+.rodape h2 {
+  font-family: var(--display);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ouro);
+  margin: 0 0 1.2rem;
+}
+.rodape__bloco p { font-size: .92rem; max-width: 40ch; margin: 0; color: var(--texto-c2); }
+.rodape__menu ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
+.rodape__menu a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: .89rem;
+  color: var(--texto-c2);
+  text-decoration: none;
+  transition: color .22s ease;
+}
+.rodape__menu a:hover { color: var(--ouro); }
+.contatos--rodape { border-top-color: var(--linha-c); }
+.contatos--rodape li { border-bottom-color: var(--linha-c); }
+.contatos--rodape a { color: var(--texto-c2); min-height: 50px; padding: .8rem .2rem; font-size: .88rem; }
+.contatos--rodape a:hover { color: var(--ouro); }
+.contatos--rodape svg { color: var(--ouro); }
+
+.rodape__fecho {
+  padding-block: 1.6rem;
+  border-top: 1px solid var(--linha-c);
+  text-align: center;
+}
+.rodape__lema { margin: 0; font-size: .93rem; color: var(--texto-c2); }
+.rodape__lema em { font-family: var(--script); font-size: 1.35em; font-style: normal; color: var(--ouro); }
+.rodape__lema a {
+  color: var(--texto-c);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ouro-filete);
+  transition: border-color .22s ease;
+}
+.rodape__lema a:hover { border-bottom-color: var(--ouro); }
+
+.rodape__base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem 1.5rem;
+  padding-block: 1rem;
+  border-top: 1px solid var(--linha-c);
+}
+.rodape__base p { margin: 0; font-size: .79rem; color: var(--texto-c2); opacity: .82; }
+.rodape__legais { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+.rodape__legais a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  color: var(--texto-c2); text-decoration: none;
+  transition: color .22s ease;
+}
+.rodape__legais a:hover { color: var(--ouro); }
+
+/* ==========================================================================
+   WhatsApp flutuante
+   ========================================================================== */
+.whatsapp-flutuante {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 14px 32px -12px rgba(37, 211, 102, .85);
+  animation: wa-float 3.2s ease-in-out infinite, wa-pulse 2.8s ease-out 1.2s infinite;
+  will-change: transform, box-shadow;
+  transition: transform .25s ease;
+}
+.whatsapp-flutuante:hover { animation-play-state: paused; transform: scale(1.13); }
+@keyframes wa-float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-9px); }
+  100% { transform: translateY(0); }
+}
+@keyframes wa-pulse {
+  0%   { box-shadow: 0 14px 32px -12px rgba(37,211,102,.85), 0 0 0 0 rgba(37,211,102,.45); }
+  70%  { box-shadow: 0 14px 32px -12px rgba(37,211,102,.85), 0 0 0 20px rgba(37,211,102,0); }
+  100% { box-shadow: 0 14px 32px -12px rgba(37,211,102,.85), 0 0 0 0 rgba(37,211,102,0); }
+}
+
+/* ==========================================================================
+   Movimento — perfil Dinâmico da persona C, direcional e contido
+   ========================================================================== */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease-out, transform .6s ease-out;
+  transition-delay: calc(var(--i, 0) * 75ms);
+}
+.animate-on-scroll.visible { opacity: 1; transform: none; }
+
+.cursos.visible .curso,
+.passos.visible .passo,
+.parceiros.visible li,
+.depoimentos.visible .depoimento,
+.galeria.visible .galeria__item,
+.razoes.visible .razao,
+.marcas li,
+.faq.visible .faq__item {
+  animation: entrar .55s cubic-bezier(.22,.61,.36,1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+@keyframes entrar { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.hero .rotulo, .hero__titulo, .hero__sub, .hero__acoes, .numeros, .hero__foto {
+  animation: abertura .8s cubic-bezier(.22,.61,.36,1) both;
+}
+.hero .rotulo  { animation-delay: .06s; }
+.hero__titulo  { animation-delay: .16s; }
+.hero__sub     { animation-delay: .3s; }
+.hero__acoes   { animation-delay: .42s; }
+.numeros       { animation-delay: .54s; }
+.hero__foto    { animation-delay: .18s; }
+@keyframes abertura { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .cursos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rodape__grade { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .rodape__marca-bloco { grid-column: 1 / -1; }
+}
+
+@media (max-width: 1000px) {
+  /* o menu de 5 itens + CTA deixa de caber: abaixo daqui quem manda é o drawer */
+  .cabecalho__nav, .cabecalho__cta { display: none; }
+  .nav-toggle { display: flex; margin-left: auto; }
+  .cabecalho__interno { justify-content: space-between; gap: 1rem; }
+  .cabecalho__logo { margin-right: auto; }
+}
+
+@media (max-width: 900px) {
+  .hero__grade { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
+  .secao__grade { grid-template-columns: minmax(0, 1fr); }
+  .secao__midia { max-width: 470px; }
+  .andamento { grid-template-columns: minmax(0, 1fr); }
+  .razoes { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
+  .depoimentos { grid-template-columns: minmax(0, 1fr); }
+  .depoimento { max-width: 640px; margin-inline: auto; width: 100%; }
+  .contato { grid-template-columns: minmax(0, 1fr); }
+  .parceiros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .palco { grid-template-columns: minmax(0, 1fr); }
+  .cartaz { max-width: 400px; margin-inline: auto; }
+}
+
+@media (max-width: 640px) {
+  .cursos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .marcas { grid-template-columns: minmax(0, 1fr); }
+  .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rodape__grade { grid-template-columns: minmax(0, 1fr); }
+  .rodape__menu ul { grid-template-columns: minmax(0, 1fr); }
+  .rodape__base { justify-content: flex-start; }
+  .hero__acoes .botao { width: 100%; }
+  .faixa__interno .botao { width: 100%; }
+  .numeros li { padding-right: 1rem; margin-right: 1rem; }
+  .whatsapp-flutuante { bottom: 1.2rem; right: 1.2rem; width: 52px; height: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-on-scroll { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .equalizador i, .whatsapp-flutuante { animation: none !important; }
+  .equalizador i { transform: scaleY(.6) !important; }
+  .cursos.visible .curso,
+  .passos.visible .passo,
+  .parceiros.visible li,
+  .depoimentos.visible .depoimento,
+  .galeria.visible .galeria__item,
+  .razoes.visible .razao,
+  .marcas li,
+  .faq.visible .faq__item,
+  .hero .rotulo, .hero__titulo, .hero__sub, .hero__acoes, .numeros, .hero__foto {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .mobile-menu, .menu-backdrop, .faq__resposta { transition: none !important; }
+}
+
+/* ==========================================================================
+   Página legal
+   ========================================================================== */
+.pagina-legal { position: relative; z-index: 1; }
+.pagina-legal h2 { font-size: clamp(1.1rem, 2vw, 1.32rem); margin-top: 2.6rem; margin-bottom: .7rem; }
+.pagina-legal p { color: var(--texto-2); }
+.pagina-legal strong { color: var(--texto); font-weight: 600; }
+.pagina-legal a { color: var(--ouro-texto); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--ouro-filete); }
+.lista-legal { margin: 0 0 1.05rem; }
+.lista-legal li { display: flex; align-items: flex-start; gap: .8rem; padding-block: .32rem; color: var(--texto-2); }
+.lista-legal li::before {
+  content: '';
+  flex: 0 0 auto;
+  margin-top: .7rem;
+  width: 6px; height: 6px;
+  background: var(--ouro);
+}
+.pagina-legal__voltar { margin-top: 2.8rem; }
+
+/* ==========================================================================
+   Ajustes de acabamento pós-revisão de prints
+   ========================================================================== */
+
+/* a galeria do palco tem que acompanhar a altura do cartaz emoldurado,
+   senão sobra um vão morto embaixo da coluna da direita */
+.palco { align-items: stretch; }
+.galeria { height: 100%; grid-auto-rows: 1fr; }
+.galeria__item { aspect-ratio: auto; min-height: 150px; }
+
+/* ==========================================================================
+   Abertura v5.1 — foto única sangrando pela borda direita
+   ========================================================================== */
+.hero {
+  min-height: clamp(600px, 86vh, 840px);
+  display: flex;
+  align-items: center;
+}
+/* a malha passa para o lado do texto, já que a direita agora é foto */
+.hero__malha {
+  mask-image: radial-gradient(110% 100% at 12% 0%, #000 8%, transparent 68%);
+  -webkit-mask-image: radial-gradient(110% 100% at 12% 0%, #000 8%, transparent 68%);
+  z-index: 0;
+}
+
+.hero__foto {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  z-index: 1;
+  width: 58%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 42% 30%;
+}
+/* o véu dissolve a foto no fundo pelos três lados que encostam no conteúdo:
+   à esquerda (onde fica o texto), embaixo e no topo (onde fica o cabeçalho fixo) */
+.hero__veu {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg,
+      var(--noite) 0%,
+      rgba(20, 36, 58, .96) 16%,
+      rgba(20, 36, 58, .62) 42%,
+      rgba(20, 36, 58, .18) 74%,
+      rgba(20, 36, 58, .42) 100%),
+    linear-gradient(180deg, var(--noite) 0%, rgba(20, 36, 58, 0) 22%),
+    linear-gradient(0deg,   var(--noite) 0%, rgba(20, 36, 58, 0) 26%);
+}
+
+.hero__grade { display: block; position: relative; z-index: 2; }
+.hero__texto { max-width: 34rem; }
+
+@media (max-width: 900px) {
+  .hero { min-height: auto; display: block; }
+  .hero__foto { width: 100%; }
+  .hero__foto img { object-position: 50% 26%; }
+  /* no mobile o texto fica por cima da foto inteira, então o véu fecha mais */
+  .hero__veu {
+    background:
+      linear-gradient(180deg, var(--noite) 0%, rgba(20, 36, 58, .88) 30%, rgba(20, 36, 58, .84) 70%, var(--noite) 100%);
+  }
+  .hero__texto { max-width: none; }
+}
+
+/* nove fotos na galeria do palco: 3x3 fecha retângulo e acompanha o cartaz */
+.galeria { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 640px) { .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* a foto estava cortando seca na borda de baixo da abertura;
+   o degradê inferior sobe mais para ela dissolver antes da seção clara */
+.hero__veu {
+  background:
+    linear-gradient(90deg,
+      var(--noite) 0%,
+      rgba(20, 36, 58, .96) 16%,
+      rgba(20, 36, 58, .62) 42%,
+      rgba(20, 36, 58, .18) 74%,
+      rgba(20, 36, 58, .42) 100%),
+    linear-gradient(180deg, var(--noite) 0%, rgba(20, 36, 58, 0) 22%),
+    linear-gradient(0deg,
+      var(--noite) 0%,
+      rgba(20, 36, 58, .78) 9%,
+      rgba(20, 36, 58, .3) 22%,
+      rgba(20, 36, 58, 0) 38%);
+}
+
+/* O ajuste do véu acima foi escrito fora de media query e sobrescreveu a versão
+   mobile, que vinha antes no arquivo. No celular o texto fica POR CIMA da foto
+   inteira, então o véu precisa fechar bem mais. Medido no render com o texto
+   oculto: sem isso o subtítulo caía para 1,02:1. */
+@media (max-width: 900px) {
+  .hero__veu {
+    background:
+      linear-gradient(180deg,
+        var(--noite) 0%,
+        rgba(20, 36, 58, .94) 18%,
+        rgba(20, 36, 58, .93) 62%,
+        rgba(20, 36, 58, .96) 85%,
+        var(--noite) 100%);
+  }
+}
+
+/* ==========================================================================
+   Abertura v5.2 — a foto estava escura demais
+   Base e variante mobile escritas JUNTAS neste bloco de propósito: escrever só
+   a base no fim do arquivo sobrescreve a media query que veio antes.
+   ========================================================================== */
+
+/* a foto de palco é escura na origem; um leve ganho a traz de volta */
+.hero__foto img { filter: brightness(1.2) contrast(1.03) saturate(1.06); }
+
+/* DESKTOP: o texto ocupa só a faixa esquerda, que é navy puro. A partir de 30%
+   da foto não há texto por cima, então o véu pode abrir muito mais. */
+.hero__veu {
+  background:
+    linear-gradient(90deg,
+      var(--noite) 0%,
+      rgba(20, 36, 58, .97) 14%,
+      rgba(20, 36, 58, .52) 30%,
+      rgba(20, 36, 58, .08) 55%,
+      rgba(20, 36, 58, 0) 78%,
+      rgba(20, 36, 58, .12) 100%),
+    linear-gradient(180deg, var(--noite) 0%, rgba(20, 36, 58, 0) 14%),
+    linear-gradient(0deg,
+      var(--noite) 0%,
+      rgba(20, 36, 58, .6) 7%,
+      rgba(20, 36, 58, .16) 17%,
+      rgba(20, 36, 58, 0) 28%);
+}
+
+/* MOBILE: a foto sai de trás do texto e vira uma faixa própria, logo abaixo
+   dele. Assim ela pode ficar clara sem custar legibilidade nenhuma, e o texto
+   volta a ficar sobre navy chapado. */
+@media (max-width: 900px) {
+  .hero { padding-bottom: 0; }
+  .hero__foto {
+    position: relative;
+    width: 100%;
+    height: clamp(265px, 62vw, 390px);
+    margin-top: clamp(2.2rem, 7vw, 3.2rem);
+  }
+  .hero__foto img { object-position: 50% 13%; }
+  .hero__veu {
+    background:
+      linear-gradient(180deg, var(--noite) 0%, rgba(20, 36, 58, 0) 22%),
+      linear-gradient(0deg,   var(--noite) 0%, rgba(20, 36, 58, 0) 18%);
+  }
+}
+
+/* ==========================================================================
+   Abertura v5.3 — foto nova em resolução cheia + violão e guitarra no fundo
+   Como no bloco anterior, base e mobile andam JUNTOS aqui: regra de base
+   escrita depois de uma media query a sobrescreve.
+   ========================================================================== */
+
+/* Violão e guitarra vêm dos ícones dos próprios cursos (mesmo traço da seção
+   02), ampliados e tingidos de marfim. Camada decorativa: fica acima da malha
+   e abaixo do texto, que está em z-index 2. A máscara radial dissolve os dois
+   antes de encostarem na foto, à direita, e no fim da seção, embaixo. */
+.hero__instrumentos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: radial-gradient(78% 92% at 20% 52%, #000 26%, transparent 76%);
+  -webkit-mask-image: radial-gradient(78% 92% at 20% 52%, #000 26%, transparent 76%);
+}
+.hero__instrumento {
+  position: absolute;
+  height: auto;
+}
+.hero__instrumento--violao {
+  left: -6%;
+  top: 38%;
+  width: clamp(330px, 37vw, 570px);
+  transform: translateY(-50%) rotate(-18deg);
+  opacity: .13;
+}
+.hero__instrumento--guitarra {
+  left: 24%;
+  top: 72%;
+  width: clamp(260px, 30vw, 450px);
+  transform: translateY(-46%) rotate(12deg);
+  opacity: .105;
+}
+
+/* a foto nova já vem bem exposta (1100px, contra 500 da anterior):
+   o ganho forte da v5.2 estouraria a pele */
+.hero__foto img {
+  filter: brightness(1.04) contrast(1.02) saturate(1.04);
+  object-position: 50% 26%;
+}
+
+/* o rosto dela fica a ~40% da largura da foto, e o texto só invade os
+   primeiros 6%: o véu pode fechar forte na borda e abrir bem antes do rosto */
+.hero__veu {
+  background:
+    linear-gradient(90deg,
+      var(--noite) 0%,
+      rgba(20, 36, 58, .93) 9%,
+      rgba(20, 36, 58, .46) 20%,
+      rgba(20, 36, 58, .1) 36%,
+      rgba(20, 36, 58, 0) 56%,
+      rgba(20, 36, 58, .1) 100%),
+    linear-gradient(180deg, var(--noite) 0%, rgba(20, 36, 58, 0) 13%),
+    linear-gradient(0deg,
+      var(--noite) 0%,
+      rgba(20, 36, 58, .6) 7%,
+      rgba(20, 36, 58, .16) 17%,
+      rgba(20, 36, 58, 0) 28%);
+}
+
+@media (max-width: 900px) {
+  /* no mobile o texto ocupa a largura toda, então os instrumentos descem para
+     a faixa dos botões e dos números e clareiam menos o fundo */
+  .hero__instrumentos {
+    mask-image: radial-gradient(106% 66% at 30% 64%, #000 26%, transparent 82%);
+    -webkit-mask-image: radial-gradient(106% 66% at 30% 64%, #000 26%, transparent 82%);
+  }
+  .hero__instrumento--violao {
+    left: -18%;
+    top: 56%;
+    width: clamp(285px, 70vw, 410px);
+    opacity: .115;
+  }
+  .hero__instrumento--guitarra {
+    left: 32%;
+    top: 80%;
+    width: clamp(250px, 60vw, 365px);
+    opacity: .1;
+  }
+  .hero__foto img { object-position: 50% 6%; }
+  .hero__veu {
+    background:
+      linear-gradient(180deg, var(--noite) 0%, rgba(20, 36, 58, 0) 22%),
+      linear-gradient(0deg,   var(--noite) 0%, rgba(20, 36, 58, 0) 18%);
+  }
+}
+
+/* Entre ~620 e 900px a faixa da foto é larga e baixa, e uma foto quadrada de
+   retrato acaba num close exagerado no rosto. Faixa mais alta devolve o
+   enquadramento (cabeça inteira até o violino) sem mudar o empilhamento. */
+@media (min-width: 620px) and (max-width: 900px) {
+  /* a faixa precisa de 70vw para caber a cena inteira: a foto e quadrada, e
+     numa janela mais baixa que isso o violino fica de fora do enquadramento */
+  .hero__foto { height: clamp(420px, 70vw, 600px); }
+  .hero__foto img { object-position: 50% 6%; }
+  /* nesta banda o texto e mais estreito que a tela: os instrumentos podem
+     crescer e entrar mais, sem chegar perto da coluna de leitura */
+  .hero__instrumento--violao  { left: -8%; top: 50%; width: clamp(330px, 46vw, 430px); }
+  .hero__instrumento--guitarra { left: 30%; top: 78%; width: clamp(300px, 40vw, 380px); }
+}
+
+/* ==========================================================================
+   Violão de fundo na seção 07 (depoimentos)
+   ========================================================================== */
+
+/* Mesmo arquivo da abertura. Sangra pela borda direita e atravessa a seção:
+   os cards são opacos e passam por cima, então o instrumento aparece acima e
+   abaixo deles, e a sobreposição vira profundidade em vez de ruído. */
+.secao__instrumento {
+  position: absolute;
+  z-index: 0;
+  height: auto;
+  right: -7%;
+  top: 50%;
+  width: clamp(330px, 36vw, 500px);
+  transform: translateY(-50%) rotate(-22deg);
+  opacity: .12;
+  pointer-events: none;
+  mask-image: radial-gradient(72% 82% at 62% 50%, #000 34%, transparent 82%);
+  -webkit-mask-image: radial-gradient(72% 82% at 62% 50%, #000 34%, transparent 82%);
+}
+@media (max-width: 900px) {
+  /* empilhado, os cards ocupam a largura toda e a seção fica alta:
+     o violão sobe para a faixa do título, que é a única área livre */
+  .secao__instrumento {
+    right: -28%;
+    top: 0;
+    width: clamp(300px, 78vw, 430px);
+    transform: translateY(-10%) rotate(-16deg);
+    opacity: .11;
+    mask-image: radial-gradient(86% 78% at 52% 46%, #000 32%, transparent 84%);
+    -webkit-mask-image: radial-gradient(86% 78% at 52% 46%, #000 32%, transparent 84%);
+  }
+}
+
+/* ==========================================================================
+   Instrumentos de fundo nas demais seções
+   Mesmo processo do violão da abertura: ícone do próprio quadro de cursos,
+   ampliado e com o alfa recurvado. Um instrumento diferente por seção.
+   A seção 02 (Cursos) fica de fora de propósito: ela já mostra os 12 ícones,
+   e um grafismo por cima viraria ruído.
+   ========================================================================== */
+
+/* Todos os arquivos saem em marfim. Nas seções de fundo claro, `invert(1)`
+   transforma o marfim em quase-preto, que a 7% sobre o creme dá o mesmo
+   cinza-frio que um arquivo tingido de navy daria — sem dobrar os assets. */
+.secao--claro .secao__instrumento { filter: invert(1); opacity: .07; }
+
+/* a faixa de conversao nao e .secao e nao tinha corte proprio */
+.faixa { overflow: hidden; }
+
+.secao__instrumento--piano    { right: -6%;  top: 16%; width: clamp(300px, 30vw, 420px); transform: rotate(-8deg); }
+.secao__instrumento--teclado  { left: -7%;   top: 82%; width: clamp(280px, 28vw, 400px); transform: translateY(-50%) rotate(9deg); right: auto; }
+.secao__instrumento--nota     { right: 6%;   top: 50%; width: clamp(150px, 15vw, 200px); transform: translateY(-50%) rotate(12deg); opacity: .16; }
+.secao__instrumento--saxofone { right: -5%;  top: 66%; width: clamp(280px, 30vw, 420px); transform: translateY(-50%) rotate(14deg); }
+.secao__instrumento--violino  { right: -8%;  top: 15%; width: clamp(260px, 26vw, 360px); transform: rotate(-20deg); }
+.secao__instrumento--ukulele  { left: -6%;   top: 62%; width: clamp(260px, 26vw, 370px); transform: translateY(-50%) rotate(-14deg); right: auto; }
+.secao__instrumento--bateria  { right: -6%;  top: 50%; width: clamp(300px, 32vw, 440px); transform: translateY(-50%) rotate(-10deg); }
+.secao__instrumento--canto    { right: -4%;  top: 20%; width: clamp(240px, 24vw, 340px); transform: rotate(11deg); }
+
+@media (max-width: 900px) {
+  /* empilhado, a coluna de texto ocupa a largura toda: os grafismos encolhem,
+     saem mais pela borda e clareiam menos o fundo atrás da leitura */
+  .secao__instrumento--piano,
+  .secao__instrumento--teclado,
+  .secao__instrumento--saxofone,
+  .secao__instrumento--violino,
+  .secao__instrumento--ukulele,
+  .secao__instrumento--bateria,
+  .secao__instrumento--canto { width: clamp(210px, 52vw, 300px); }
+  .secao--claro .secao__instrumento { opacity: .06; }
+  .secao__instrumento--piano    { right: -20%; top: 6%; }
+  .secao__instrumento--teclado  { left: -22%;  top: 90%; }
+  .secao__instrumento--nota     { right: 4%;   top: 50%; width: clamp(110px, 26vw, 150px); }
+  .secao__instrumento--saxofone { right: -22%; top: 78%; }
+  .secao__instrumento--violino  { right: -24%; top: 8%; }
+  .secao__instrumento--ukulele  { left: -24%;  top: 72%; }
+  .secao__instrumento--bateria  { right: -22%; top: 42%; }
+  .secao__instrumento--canto    { right: -20%; top: 12%; }
+}
+
+/* ==========================================================================
+   09. Instagram — texto à esquerda, grade 3×2 à direita
+   ========================================================================== */
+.secao--instagram { background: var(--noite-topo); }
+
+.insta__grade {
+  display: grid;
+  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  gap: clamp(2.4rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.insta__texto { max-width: 34rem; }
+
+/* o card branco do ícone: único ponto de branco chapado da seção */
+.insta__selo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1.4rem;
+  border-radius: var(--raio-g);
+  background: var(--branco);
+  color: var(--noite);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .28);
+}
+.insta__selo svg { width: 26px; height: 26px; }
+
+/* o itálico do título puxa o ouro, que na persona é sempre detalhe */
+.secao--instagram .titulo em {
+  font-style: italic;
+  color: var(--ouro-claro);
+}
+
+.insta__botao { margin-top: 1.9rem; }
+.insta__botao svg { flex: none; }
+
+.insta__feed {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(.5rem, 1vw, .85rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.insta__item { margin: 0; }
+.insta__item a {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--raio);
+  /* degradê da paleta por baixo: é o que aparece enquanto a foto carrega,
+     em vez do buraco branco padrão */
+  background: linear-gradient(135deg, var(--noite-3) 0%, var(--noite-2) 55%, var(--noite) 100%);
+}
+.insta__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .45s cubic-bezier(.2, .7, .3, 1);
+}
+.insta__over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--branco);
+  background: rgba(15, 28, 46, .62);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.insta__over svg {
+  width: 30px;
+  height: 30px;
+  transform: scale(.72);
+  transition: transform .28s cubic-bezier(.2, .7, .3, 1);
+}
+.insta__item a:hover img,
+.insta__item a:focus-visible img { transform: scale(1.06); }
+.insta__item a:hover .insta__over,
+.insta__item a:focus-visible .insta__over { opacity: 1; }
+.insta__item a:hover .insta__over svg,
+.insta__item a:focus-visible .insta__over svg { transform: scale(1); }
+
+/* o mesmo stagger das outras grades da persona */
+.insta__feed.visible .insta__item { animation-delay: calc(var(--i) * .07s); }
+
+@media (max-width: 900px) {
+  .insta__grade { grid-template-columns: minmax(0, 1fr); gap: 2.6rem; }
+  .insta__texto { max-width: none; }
+  .insta__feed {
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+}
+
+/* toque não tem hover: nesses aparelhos o ícone fica sempre visível, discreto,
+   para o card não parecer uma foto morta */
+@media (hover: none) {
+  .insta__over { opacity: 1; background: linear-gradient(0deg, rgba(15, 28, 46, .55) 0%, rgba(15, 28, 46, 0) 55%); align-items: flex-end; justify-content: flex-end; padding: .5rem; }
+  .insta__over svg { width: 20px; height: 20px; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Ajustes da 09 e dos grafismos, depois de ver os prints
+   -------------------------------------------------------------------------- */
+
+/* @handle não vai em caixa alta: o botão da persona é uppercase por padrão,
+   mas um usuário do Instagram é escrito como está no perfil */
+.insta__botao { text-transform: none; letter-spacing: .01em; }
+
+/* as fotos são 4:5 (é como o Instagram exibe a grade do perfil hoje). A célula
+   é quadrada, então cerca de um quarto da altura fica de fora — o recorte é
+   escolhido por foto, para não cortar a palavra que é o assunto do post */
+.insta__item:nth-child(4) img { object-position: 50% 88%; }
+.insta__item:nth-child(5) img { object-position: 50% 82%; }
+
+/* o microfone estava atrás da grade de fotos, onde só aparecia em pedaços:
+   passa para o lado do texto, abaixo do botão */
+.secao__instrumento--canto { right: auto; left: -7%; top: 78%; transform: translateY(-50%) rotate(11deg); }
+
+/* a nota estava atrás do botão do WhatsApp e só espiava pela borda dele:
+   vai para o vão entre o texto e o botão */
+.secao__instrumento--nota { right: 32%; }
+
+@media (max-width: 900px) {
+  .secao__instrumento--canto { left: -24%; top: 26%; }
+  /* empilhada, a faixa não tem mais vão no meio: a nota desce para o rodapé dela */
+  .secao__instrumento--nota { right: 4%; top: 76%; }
+}
+
+/* O piano era o único grafismo que passava por baixo dos parágrafos: mediu
+   4,74:1 contra mínimo de 4,5, folga curta demais. Empurrado para a borda,
+   sai de trás da coluna de leitura sem sumir da composição. */
+.secao__instrumento--piano { right: -16%; }
+@media (max-width: 900px) { .secao__instrumento--piano { right: -30%; } }
+
+/* ==========================================================================
+   03. Como funciona — foto de aula na coluna da direita
+   ========================================================================== */
+
+/* Quadrada, e não 4:5 como o arquivo de origem. O percurso do sticky é a
+   altura da coluna de texto menos a da foto: em 4:5 sobravam 219px de curso,
+   em 1:1 sobram 329px. O object-position fica em 50% 0% porque, no recorte
+   quadrado, qualquer valor acima de ~12% corta o topo da cabeça dela. */
+.quadro--aula { aspect-ratio: 1 / 1; }
+.quadro--aula img { object-position: 50% 0%; }
+
+/* ==========================================================================
+   Abertura no mobile — foto ACIMA do texto, sem véu
+   Como sempre neste arquivo: base e mobile no mesmo bloco.
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  /* `.hero__malha` e `.hero__instrumentos` são absolutos e ficam fora do fluxo,
+     então a ordem do flex só decide entre a foto e a coluna de texto */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    /* com a foto no topo ela encosta no cabeçalho fixo: o respiro grande da
+       versão anterior era para o texto, que agora vem depois */
+    padding-top: clamp(4.6rem, 17vw, 5.6rem);
+  }
+  .hero__foto {
+    order: -1;
+    margin-top: 0;
+    margin-bottom: clamp(2rem, 6vw, 2.8rem);
+  }
+  /* sem véu no mobile: a foto aparece limpa, sem o degradê que a embaçava.
+     Dá para tirar porque, empilhada, ela não tem texto por cima — o contraste
+     do texto passou a depender só do navy chapado */
+  .hero__veu { display: none; }
+}
+
+/* O cabeçalho é fixo e fica por cima da foto agora que ela subiu. O
+   `backdrop-filter` borrava a faixa de foto logo abaixo dele; no mobile ele sai
+   e o fundo vira opaco, para a foto começar nítida. */
+@media (max-width: 900px) {
+  .cabecalho {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--noite-topo);
+  }
+  .cabecalho.rolado { background: var(--noite-topo); }
+}
+
+/* Com a foto somada ao mockup, a coluna da direita ficou bem mais alta que a
+   dos passos, e o `align-items: center` original abria um vão no TOPO da
+   esquerda. Alinhado pelo topo, as duas começam juntas e a sobra vai para o pé
+   da coluna esquerda, onde o grafismo do teclado já ocupa o espaço. */
+.andamento { align-items: start; }
+
+/* ==========================================================================
+   03. Como funciona — a foto acompanha a rolagem (sticky)
+   ========================================================================== */
+
+/* `position: sticky` só funciona se NENHUM ancestral criar contexto de
+   rolagem, e `.secao` usa `overflow: hidden` para cortar o grafismo de fundo —
+   isso mataria o sticky em silêncio. `overflow: clip` corta igual e, por não
+   criar caixa rolável, deixa o sticky se prender à viewport. */
+#como-funciona { overflow: clip; }
+
+/* o cabeçalho entrou na coluna esquerda: sem isso a foto teria como área de
+   rolagem só a própria altura, e ficaria parada */
+.andamento__texto { display: flex; flex-direction: column; }
+.andamento__texto .cabecalho-secao { margin-bottom: clamp(2rem, 4vw, 3rem); }
+
+.quadro--aula {
+  position: sticky;
+  /* cabeçalho fixo (~72px) mais uma folga */
+  top: clamp(5.5rem, 8vw, 7rem);
+}
+
+@media (max-width: 900px) {
+  /* empilhado a foto vem depois dos passos e não há coluna para acompanhar:
+     prender aqui só faria a foto flutuar sozinha no fim da seção */
+  .quadro--aula { position: static; }
+  .andamento__texto .cabecalho-secao { margin-bottom: clamp(1.8rem, 5vw, 2.4rem); }
+}
+
+/* No empilhado a foto vai para cima do texto, como já acontece na seção 01:
+   lá a mídia vem antes do rótulo no DOM, e a coluna única herda essa ordem.
+   Aqui o cabeçalho está dentro de .andamento__texto, então quem se move é a
+   foto. `order` funciona em grid do mesmo jeito que em flex. */
+@media (max-width: 900px) {
+  .quadro--aula {
+    order: -1;
+    margin-bottom: clamp(1.8rem, 5vw, 2.6rem);
+  }
+}
