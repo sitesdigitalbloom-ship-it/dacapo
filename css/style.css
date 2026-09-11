@@ -1666,6 +1666,11 @@ h1, h2, h3 {
   font-size: .76rem;
   letter-spacing: .06em;
 }
+/* sem foto: silhueta genérica de usuário (cabeça + ombros), cortada pelo
+   círculo embaixo, como o avatar padrão do Google; em cinza, não em ouro,
+   para não competir com o nome */
+.depoimento__avatar--sem-foto { color: var(--texto-c2); }
+.depoimento__avatar--sem-foto svg { display: block; width: 100%; height: 100%; opacity: .72; }
 .depoimentos__acao { display: flex; justify-content: center; margin-top: clamp(2.2rem, 4vw, 3rem); }
 
 @media (max-width: 900px) {
