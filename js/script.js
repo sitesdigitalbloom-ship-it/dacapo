@@ -4,7 +4,7 @@
 (function () {
   'use strict';
 
-  var WHATSAPP = '5551981216307';
+  var WHATSAPP = '5551992611175';
 
   /* ---------- ano dinâmico no rodapé ---------- */
   var ano = document.getElementById('footer-year');

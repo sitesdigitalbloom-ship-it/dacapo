@@ -547,62 +547,6 @@ h1, h2, h3 {
 .curso:hover img { opacity: 1; transform: translateY(-2px); }
 
 /* ==========================================================================
-   Como funciona — passos + foto da aula
-   ========================================================================== */
-.andamento {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
-  gap: clamp(2.4rem, 5vw, 4.5rem);
-  align-items: center;
-}
-.passos { display: flex; flex-direction: column; }
-.passo {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 1.2rem;
-  padding-block: 1.4rem;
-  border-top: 1px solid var(--linha);
-}
-.passo:last-child { border-bottom: 1px solid var(--linha); }
-.passo__num {
-  font-family: var(--display);
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .1em;
-  color: var(--ouro-texto);
-  padding-top: .28rem;
-}
-.passo h3 { font-size: 1.06rem; margin-bottom: .35rem; }
-.passo p { margin: 0; font-size: .93rem; }
-
-/* ==========================================================================
-   Faixa de conversão
-   ========================================================================== */
-.faixa {
-  position: relative;
-  background: var(--noite-topo);
-  padding-block: clamp(2.6rem, 4.5vw, 3.8rem);
-  border-block: 1px solid var(--linha-c);
-}
-.faixa__interno {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(1.8rem, 4vw, 3.5rem);
-  flex-wrap: wrap;
-}
-.faixa__titulo {
-  font-size: clamp(1.5rem, 2.9vw, 2.1rem);
-  font-weight: 700;
-  line-height: 1.18;
-  color: var(--texto-c);
-  max-width: 26ch;
-  margin: 0;
-  text-wrap: balance;
-}
-.faixa .botao { flex: 0 0 auto; }
-
-/* ==========================================================================
    Razões
    ========================================================================== */
 .razoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.2rem, 2.4vw, 2rem); }
@@ -1006,11 +950,11 @@ h1, h2, h3 {
 .animate-on-scroll.visible { opacity: 1; transform: none; }
 
 .cursos.visible .curso,
-.passos.visible .passo,
 .parceiros.visible li,
 .depoimentos.visible .depoimento,
 .galeria.visible .galeria__item,
 .razoes.visible .razao,
+.materiais__mosaico.visible .materiais__item,
 .marcas li,
 .faq.visible .faq__item {
   animation: entrar .55s cubic-bezier(.22,.61,.36,1) both;
@@ -1050,7 +994,6 @@ h1, h2, h3 {
   .hero__grade { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
   .secao__grade { grid-template-columns: minmax(0, 1fr); }
   .secao__midia { max-width: 470px; }
-  .andamento { grid-template-columns: minmax(0, 1fr); }
   .razoes { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
   .depoimentos { grid-template-columns: minmax(0, 1fr); }
   .depoimento { max-width: 640px; margin-inline: auto; width: 100%; }
@@ -1068,7 +1011,6 @@ h1, h2, h3 {
   .rodape__menu ul { grid-template-columns: minmax(0, 1fr); }
   .rodape__base { justify-content: flex-start; }
   .hero__acoes .botao { width: 100%; }
-  .faixa__interno .botao { width: 100%; }
   .numeros li { padding-right: 1rem; margin-right: 1rem; }
   .whatsapp-flutuante { bottom: 1.2rem; right: 1.2rem; width: 52px; height: 52px; }
 }
@@ -1079,7 +1021,6 @@ h1, h2, h3 {
   .equalizador i, .whatsapp-flutuante { animation: none !important; }
   .equalizador i { transform: scaleY(.6) !important; }
   .cursos.visible .curso,
-  .passos.visible .passo,
   .parceiros.visible li,
   .depoimentos.visible .depoimento,
   .galeria.visible .galeria__item,
@@ -1420,12 +1361,8 @@ h1, h2, h3 {
    cinza-frio que um arquivo tingido de navy daria — sem dobrar os assets. */
 .secao--claro .secao__instrumento { filter: invert(1); opacity: .07; }
 
-/* a faixa de conversao nao e .secao e nao tinha corte proprio */
-.faixa { overflow: hidden; }
-
 .secao__instrumento--piano    { right: -6%;  top: 16%; width: clamp(300px, 30vw, 420px); transform: rotate(-8deg); }
 .secao__instrumento--teclado  { left: -7%;   top: 82%; width: clamp(280px, 28vw, 400px); transform: translateY(-50%) rotate(9deg); right: auto; }
-.secao__instrumento--nota     { right: 6%;   top: 50%; width: clamp(150px, 15vw, 200px); transform: translateY(-50%) rotate(12deg); opacity: .16; }
 .secao__instrumento--saxofone { right: -5%;  top: 66%; width: clamp(280px, 30vw, 420px); transform: translateY(-50%) rotate(14deg); }
 .secao__instrumento--violino  { right: -8%;  top: 15%; width: clamp(260px, 26vw, 360px); transform: rotate(-20deg); }
 .secao__instrumento--ukulele  { left: -6%;   top: 62%; width: clamp(260px, 26vw, 370px); transform: translateY(-50%) rotate(-14deg); right: auto; }
@@ -1445,7 +1382,6 @@ h1, h2, h3 {
   .secao--claro .secao__instrumento { opacity: .06; }
   .secao__instrumento--piano    { right: -20%; top: 6%; }
   .secao__instrumento--teclado  { left: -22%;  top: 90%; }
-  .secao__instrumento--nota     { right: 4%;   top: 50%; width: clamp(110px, 26vw, 150px); }
   .secao__instrumento--saxofone { right: -22%; top: 78%; }
   .secao__instrumento--violino  { right: -24%; top: 8%; }
   .secao__instrumento--ukulele  { left: -24%;  top: 72%; }
@@ -1578,14 +1514,8 @@ h1, h2, h3 {
    passa para o lado do texto, abaixo do botão */
 .secao__instrumento--canto { right: auto; left: -7%; top: 78%; transform: translateY(-50%) rotate(11deg); }
 
-/* a nota estava atrás do botão do WhatsApp e só espiava pela borda dele:
-   vai para o vão entre o texto e o botão */
-.secao__instrumento--nota { right: 32%; }
-
 @media (max-width: 900px) {
   .secao__instrumento--canto { left: -24%; top: 26%; }
-  /* empilhada, a faixa não tem mais vão no meio: a nota desce para o rodapé dela */
-  .secao__instrumento--nota { right: 4%; top: 76%; }
 }
 
 /* O piano era o único grafismo que passava por baixo dos parágrafos: mediu
@@ -1593,17 +1523,6 @@ h1, h2, h3 {
    sai de trás da coluna de leitura sem sumir da composição. */
 .secao__instrumento--piano { right: -16%; }
 @media (max-width: 900px) { .secao__instrumento--piano { right: -30%; } }
-
-/* ==========================================================================
-   03. Como funciona — foto de aula na coluna da direita
-   ========================================================================== */
-
-/* Quadrada, e não 4:5 como o arquivo de origem. O percurso do sticky é a
-   altura da coluna de texto menos a da foto: em 4:5 sobravam 219px de curso,
-   em 1:1 sobram 329px. O object-position fica em 50% 0% porque, no recorte
-   quadrado, qualquer valor acima de ~12% corta o topo da cabeça dela. */
-.quadro--aula { aspect-ratio: 1 / 1; }
-.quadro--aula img { object-position: 50% 0%; }
 
 /* ==========================================================================
    Abertura no mobile — foto ACIMA do texto, sem véu
@@ -1643,47 +1562,139 @@ h1, h2, h3 {
   .cabecalho.rolado { background: var(--noite-topo); }
 }
 
-/* Com a foto somada ao mockup, a coluna da direita ficou bem mais alta que a
-   dos passos, e o `align-items: center` original abria um vão no TOPO da
-   esquerda. Alinhado pelo topo, as duas começam juntas e a sobra vai para o pé
-   da coluna esquerda, onde o grafismo do teclado já ocupa o espaço. */
-.andamento { align-items: start; }
-
 /* ==========================================================================
-   03. Como funciona — a foto acompanha a rolagem (sticky)
+   Ajustes de setembro/2026, pedidos pela escola
+   Como sempre neste arquivo: base e mobile no mesmo bloco, porque regra de
+   base escrita depois de uma media query a sobrescreve.
    ========================================================================== */
 
-/* `position: sticky` só funciona se NENHUM ancestral criar contexto de
-   rolagem, e `.secao` usa `overflow: hidden` para cortar o grafismo de fundo —
-   isso mataria o sticky em silêncio. `overflow: clip` corta igual e, por não
-   criar caixa rolável, deixa o sticky se prender à viewport. */
-#como-funciona { overflow: clip; }
-
-/* o cabeçalho entrou na coluna esquerda: sem isso a foto teria como área de
-   rolagem só a própria altura, e ficaria parada */
-.andamento__texto { display: flex; flex-direction: column; }
-.andamento__texto .cabecalho-secao { margin-bottom: clamp(2rem, 4vw, 3rem); }
-
-.quadro--aula {
-  position: sticky;
-  /* cabeçalho fixo (~72px) mais uma folga */
-  top: clamp(5.5rem, 8vw, 7rem);
+/* Abertura: o subtítulo virou oferta + prova social, em dois parágrafos */
+.hero__sub { margin-bottom: .9rem; text-wrap: pretty; }
+.hero__prova {
+  max-width: 50ch;
+  margin-bottom: 2.2rem;
+  font-size: clamp(.95rem, 1.25vw, 1.02rem);
+  color: var(--texto-c2);
+  animation: abertura .8s cubic-bezier(.22,.61,.36,1) .36s both;
 }
+.hero__prova strong { color: var(--ouro-claro); font-weight: 600; }
+
+/* 03. Por que a Da Capo: razões empilhadas à esquerda, foto do palco à direita.
+   A imagem é absoluta dentro do quadro, então a foto estica até a altura da
+   coluna de texto e nenhuma das duas fica com vão embaixo. */
+.diferenciais {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: clamp(2.4rem, 5vw, 4.5rem);
+  align-items: stretch;
+}
+.diferenciais .razoes { grid-template-columns: minmax(0, 1fr); gap: 1.7rem; }
+.diferenciais .razao h3 { max-width: none; }
+.diferenciais__foto { min-height: 460px; }
+.diferenciais__foto img { position: absolute; inset: 0; object-position: 50% 30%; }
+
+/* 04. Material didático: texto à esquerda, mosaico das apostilas à direita.
+   São duas seções claras seguidas (03 e 04): o bege mais fundo e o filete
+   separam as duas sem quebrar a alternância com o navy do palco, logo depois. */
+.secao--materiais { background: var(--claro-2); border-top: 1px solid var(--linha); }
+.materiais {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: clamp(2.4rem, 5vw, 4.5rem);
+  align-items: center;
+}
+.materiais__texto > p { max-width: 54ch; }
+/* 2fr + 1fr + 1fr com as capas em 3:4: a foto grande, que ocupa as duas
+   linhas, também fecha em 3:4 e o mosaico vira um retângulo sem sobra */
+.materiais__mosaico {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(.5rem, 1vw, .75rem);
+}
+.materiais__item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--raio);
+  background: var(--claro);
+  box-shadow: var(--sombra);
+}
+.materiais__item--destaque { grid-row: span 2; aspect-ratio: auto; }
+.materiais__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .55s cubic-bezier(.22,.61,.36,1);
+}
+.materiais__item:hover img { transform: scale(1.04); }
+
+/* 06. Parceiros: quatro logos numa linha só */
+.parceiros { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+/* selo redondo: o nome fica dentro do círculo e sumiria na altura das outras */
+.parceiros img.parceiro--selo { max-height: 88px; }
+
+/* 07. Depoimentos: estrelas no topo, avatar ao lado do nome, CTA embaixo */
+/* `space` repete quantas couberem: 92px cabem 5 estrelas de 16px (96 já cabia 6) */
+.depoimento__estrelas {
+  display: block;
+  width: 92px;
+  height: 16px;
+  margin-bottom: 1rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23D9A441' d='M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.05 1.1-6.5-4.7-4.6 6.5-.95z'/%3E%3C/svg%3E") left center / 16px 16px space no-repeat;
+}
+.depoimento figcaption { display: flex; align-items: center; gap: .85rem; }
+.depoimento__avatar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+  background: var(--noite-3);
+  border: 1px solid var(--ouro-filete);
+  color: var(--ouro-claro);
+  font-size: .76rem;
+  letter-spacing: .06em;
+}
+.depoimentos__acao { display: flex; justify-content: center; margin-top: clamp(2.2rem, 4vw, 3rem); }
 
 @media (max-width: 900px) {
-  /* empilhado a foto vem depois dos passos e não há coluna para acompanhar:
-     prender aqui só faria a foto flutuar sozinha no fim da seção */
-  .quadro--aula { position: static; }
-  .andamento__texto .cabecalho-secao { margin-bottom: clamp(1.8rem, 5vw, 2.4rem); }
+  /* empilhado: rótulo e título, depois a foto, depois as razões */
+  .diferenciais { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .diferenciais__texto { display: contents; }
+  .diferenciais__foto {
+    order: 1;
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    max-width: 470px;
+    margin-bottom: clamp(2rem, 6vw, 2.6rem);
+  }
+  .diferenciais__foto img { object-position: 50% 22%; }
+  .diferenciais .razoes { order: 2; }
+
+  .materiais { grid-template-columns: minmax(0, 1fr); }
+  .materiais__mosaico { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .materiais__item--destaque { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 1 / 1; }
+  .materiais__item--destaque img { object-position: 50% 78%; }
+
+  /* a regra de 4 colunas acima veio depois da media query original */
+  .parceiros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* No empilhado a foto vai para cima do texto, como já acontece na seção 01:
-   lá a mídia vem antes do rótulo no DOM, e a coluna única herda essa ordem.
-   Aqui o cabeçalho está dentro de .andamento__texto, então quem se move é a
-   foto. `order` funciona em grid do mesmo jeito que em flex. */
-@media (max-width: 900px) {
-  .quadro--aula {
-    order: -1;
-    margin-bottom: clamp(1.8rem, 5vw, 2.6rem);
+@media (max-width: 640px) {
+  /* o texto do CTA é longo demais para o nowrap do botão numa tela de 390px */
+  .depoimentos__acao .botao { width: 100%; white-space: normal; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__prova,
+  .materiais__mosaico.visible .materiais__item {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
