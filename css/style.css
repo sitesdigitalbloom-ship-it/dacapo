@@ -1612,6 +1612,8 @@ h1, h2, h3 {
 }
 .materiais__texto > p { max-width: 54ch; }
 .materiais__acao { margin-top: clamp(1.8rem, 3vw, 2.4rem); }
+/* o mesmo CTA existe duas vezes: junto do texto na coluna e depois das fotos no empilhado */
+.materiais__acao--fotos { display: none; }
 /* 2fr + 1fr + 1fr com as capas em 3:4: a foto grande, que ocupa as duas
    linhas, também fecha em 3:4 e o mosaico vira um retângulo sem sobra */
 .materiais__mosaico {
@@ -1695,6 +1697,8 @@ h1, h2, h3 {
   .materiais__mosaico { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .materiais__item--destaque { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 1 / 1; }
   .materiais__item--destaque img { object-position: 50% 78%; }
+  .materiais__acao--texto { display: none; }
+  .materiais__acao--fotos { display: block; margin-top: 0; }
 
   /* a regra de 4 colunas acima veio depois da media query original */
   .parceiros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
