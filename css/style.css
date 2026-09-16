@@ -1611,6 +1611,7 @@ h1, h2, h3 {
   align-items: center;
 }
 .materiais__texto > p { max-width: 54ch; }
+.materiais__acao { margin-top: clamp(1.8rem, 3vw, 2.4rem); }
 /* 2fr + 1fr + 1fr com as capas em 3:4: a foto grande, que ocupa as duas
    linhas, também fecha em 3:4 e o mosaico vira um retângulo sem sobra */
 .materiais__mosaico {
@@ -1701,7 +1702,8 @@ h1, h2, h3 {
 
 @media (max-width: 640px) {
   /* o texto do CTA é longo demais para o nowrap do botão numa tela de 390px */
-  .depoimentos__acao .botao { width: 100%; white-space: normal; text-align: center; }
+  .depoimentos__acao .botao,
+  .materiais__acao .botao { width: 100%; white-space: normal; text-align: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
